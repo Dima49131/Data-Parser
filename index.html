@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Parser</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .container { max-width: 600px; margin: auto; }
+    textarea, button { width: 100%; margin-top: 10px; }
+    .output { margin-top: 20px; padding: 10px; background-color: #f4f4f9; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Data Parser</h1>
+  <p>Enter terms and definitions below. Separate terms and definitions by a newline, and separate each pair with a blank line.</p>
+  
+  <textarea id="dataInput" rows="10" placeholder="Enter your data here..."></textarea>
+  <button onclick="processData()">Parse Data</button>
+
+  <div class="output" id="output"></div>
+</div>
+
+<script>
+  function parseTo2DArray(data) {
+      const entries = data.trim().split(/\n\s*\n/);    
+      const termDefinitions = entries.map(entry => {
+          const [term, ...definitionParts] = entry.split(/\n/);
+          const termText = term.trim();
+          const definitionText = definitionParts.join(" ").trim();        
+          return termText && definitionText ? [termText, definitionText] : null;
+      }).filter(pair => pair !== null); 
+      return termDefinitions;
+  }
+
+  function processData() {
+      const data = document.getElementById("dataInput").value;
+      const cleanedArr = parseTo2DArray(data);
+
+      // Generate the output format "term=definition~"
+      let outputStr = "";
+      for (let i = 0; i < cleanedArr.length; i++) {
+          outputStr += cleanedArr[i][0] + "=" + cleanedArr[i][1] + "~";
+      }
+
+      // Display the output in the 'output' div
+      document.getElementById("output").innerText = outputStr;
+  }
+</script>
+
+</body>
+</html>
